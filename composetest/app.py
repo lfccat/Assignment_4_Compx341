@@ -18,13 +18,6 @@ def get_hit_count():
             retries -= 1
             time.sleep(0.5)
 
-
-@app.route('/')
-def hello():
-    count = get_hit_count()
-    return 'Hello World! I have been seen {} times.\n'.format(count)
-
-
 def prime(num):
     isprime = True
     i = 2
@@ -40,3 +33,23 @@ def prime(num):
         else:
             i+= 1
     return isprime
+
+
+@app.route('/isPrime/<int:number>')
+def primes(number):
+    
+    primer = prime(number)
+    if primer == True:
+        return '{} is prime. \n'.format(number)
+    elif primer == False:
+        return '{} is not prime. \n'.format(number)
+
+    
+
+
+@app.route('/hello')
+def hello():
+    count = get_hit_count()
+    return 'Hello World! I have been seen {} times.\n'.format(count)
+
+
