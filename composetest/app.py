@@ -1,5 +1,5 @@
 import time
-
+import math
 import redis
 from flask import Flask
 
@@ -8,23 +8,27 @@ redisClient = redis.Redis(host='redis', port=6379)
 numberList = "numbers"
 
 
+@app.route('/clear')
+def clear():
+    redisClient.flushdb()
+    return
 
 
 
 def prime(num):
-    isprime = True
-    i = 2
+     
     if num <= 1:
-        isprime = False
-        return isprime
-    while i <= num:
-        if num % i == 0 and i != num:
-            isprime = False
+        return False
+    if num == 2:
+        return True
+    if num > 2 and num % 2 == 0:
+        return False
+    max_div = math.floor(math.sqrt(num))
+    for i in range(3, 1 + max_div, 2):
+        if num % i == 0:
+            return False
             
-            return isprime
-        else:
-            i+= 1
-    return isprime
+    return True
 
 @app.route('/primesStored')
 def store():
@@ -55,5 +59,11 @@ def primes(number):
         return '{} is prime. \n'.format(number)
     elif primer == False:
         return '{} is not prime. \n'.format(number)
+
+
+
+
+
+
 
 
