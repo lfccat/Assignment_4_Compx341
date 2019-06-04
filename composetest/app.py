@@ -11,7 +11,7 @@ numberList = "numbers"
 @app.route('/clear')
 def clear():
     redisClient.flushdb()
-    return
+    return 'Cleared redis \n'
 
 
 
@@ -37,7 +37,7 @@ def store():
     while True:
        try:
            for i in range(0, redisClient.llen(numberList)):
-       
+             
                count += redisClient.lindex(numberList, i)
                count += b' '
            return '{}\n'.format(str(count, 'utf-8'))
@@ -50,13 +50,27 @@ def store():
 
 @app.route('/isPrime/<int:number>')
 def primes(number):
-    
+    match = False
     primer = prime(number)
+    num2 = str(number).encode()
     if primer == True:
-        redisClient.lpush(numberList, number)
+        while True:
+            try:
+                for i in range(0, redisClient.llen(numberList)):
+                    if redisClient.lindex(numberList, i) == num2:                   
+                       match = True
+                       break
+                if match == False:
+                    redisClient.lpush(numberList,number)
+                return '{} is prime. \n'.format(number)            
+            except redis.exceptions.ConnectionError as exc:
+                if retries == 0:
+                    raise exc
+                retries -= 1
+                times.sleep(0.5)
         
         
-        return '{} is prime. \n'.format(number)
+        
     elif primer == False:
         return '{} is not prime. \n'.format(number)
 
