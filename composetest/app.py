@@ -7,11 +7,11 @@ app = Flask(__name__)
 redisClient = redis.Redis(host='redis', port=6379)
 numberList = "numbers"
 
-
-@app.route('/clear')
-def clear():
-    redisClient.flushdb()
-    return 'Cleared redis \n'
+#no longer in use function
+# @app.route('/clear')
+# def clear():
+#    redisClient.flushdb()
+#   return 'Cleared redis \n'
 
 
 
@@ -73,8 +73,6 @@ def primes(number):
         
     elif primer == False:
         return '{} is not prime. \n'.format(number)
-
-
 
 
 
